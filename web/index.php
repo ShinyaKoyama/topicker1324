@@ -1,51 +1,44 @@
 <?php
 
-require('../vendor/autoload.php');
+$accessToken = 'gIaXcBjVSAiACT1C8+4Zd3RXN3LJQGUvMEn4SPQSxB3PoSaIjz0H/Fu+IAKGvVGfE/g/ZKxq60d0AUZFF3o4FLIrBmDBvyqvBlW8CTFZ0hy8YXUN3CTsFWF0OhTFdlHQR1cZ+S6tsaB43RTrDjXy9wdB04t89/1O/w1cDnyilFU=';
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+// ユーザからのメッセージ取得
+$jsonString = file_get_contents('php://input');
+$jsonObj = json_decode($jsonString);
 
-phpinfo();
+$type = $jsonObj->{"events"}[0]->{"message"}->{"type"};
+// メッセージ取得
+$mesText = $jsonObj->{"events"}[0]->{"message"}->{"text"};
+// ReplyToken取得
+$replyToken = $jsonObj->{"events"}[0]->{"replyToken"};
 
-$app = new Silex\Application();
-$bot = new CU\LineBot();
+// メッセージ以外の時は何も返さず終了
+if($type !== "text") {
+	exit;
+}
 
-$app->register(new Silex\Provider\MonologServiceProvider(), array(
-    'monolog.logfile' => 'php://stderr',
-));
+// 返信データ作成
+$responseFormatText = [
+		"type" => "text",
+		"text" => $mesText."じゃないよ..."
+	];
+	
+$postData = [
+		"replyToken" => $replyToken,
+		"messages"   => [$responseFormatText]
+	];
+	
+$ch = curl_init("https://api.line.me/v2/bot/message/reply");
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
+curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+			'Content-Type: application/json; charser=UTF-8',
+			'Authorization: Bearer '.$accessToken
+		)
+	);
 
-$app->before(function (Request $request) use($bot) {
-    // Signature validation
-    $request_body = $request->getContent();
-    $signature = $request->headers->get('X-LINE-CHANNELSIGNATURE');
-    if (!$bot->isValid($signature, $request_body)) {
-        return new Response('Signature validation failed.', 400);
-    }
-});
-
-$app->post('/callback', function (Request $request) use ($app, $bot) {
-    ob_start();
-    $raw = file_get_contents('php://input');
-    var_dump(json_decode($raw,1));
-    $raw = ob_get_clean();
-    file_put_contents('/tmp/dump.txt', $raw."\n=====================================\n", FILE_APPEND);
-    echo "OK";
-    
-    // Let's hack from here!
-    $body = json_decode($request->getContent(), true);
-
-    foreach ($body['result'] as $obj) {
-        $app['monolog']->addInfo(sprintf('obj: %s', json_encode($obj)));
-        $from = $obj['content']['from'];
-        $content = $obj['content'];
-
-        if ($content['text']) {
-            $bot->sendText($from, sprintf('%sじゃない', $content['text'])); 
-        }
-    }
-
-    return 0;
-});
-
-$app->run();
+$result = curl_exec($ch);
+curl_close($ch);
 
