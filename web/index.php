@@ -12,18 +12,6 @@ $mesText = $jsonObj->{"events"}[0]->{"message"}->{"text"};
 // ReplyToken取得
 $replyToken = $jsonObj->{"events"}[0]->{"replyToken"};
 
-// ユーザからの送信の場合
-$sourceType = $jsonObj->{"events"}[0]->{"source"}[0]->{"type"};
-$sourceUserId = $jsonObj->{"events"}[0]->{"source"}[1]->{"userId"};
-
-// グループからの送信の場合
-$sourceType = $jsonObj->{"events"}[0]->{"source"}[0]->{"type"};
-$sourceGroupId = $jsonObj->{"events"}[0]->{"source"}[1]->{"groupId"};
-
-// トークルームからの送信の場合
-$sourceType = $jsonObj->{"events"}[0]->{"source"}[0]->{"type"};
-$sourceRoomId = $jsonObj->{"events"}[0]->{"source"}[1]->{"roomId"};
-
 // メッセージ以外の時は何も返さず終了
 if($type !== "text") {
 	exit;
