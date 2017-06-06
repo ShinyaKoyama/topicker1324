@@ -5,6 +5,8 @@ require('../vendor/autoload.php');
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+phpinfo();
+
 $app = new Silex\Application();
 $bot = new CU\LineBot();
 
