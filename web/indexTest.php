@@ -12,62 +12,21 @@ $mesText = $jsonObj->{"events"}[0]->{"message"}->{"text"};
 // ReplyToken取得
 $replyToken = $jsonObj->{"events"}[0]->{"replyToken"};
 
-// トーク相手のタイプ取得
-$sourceType = $jsonObj->{"events"}[0]->{"source"}->{"type"};
-
-// トーク相手のタイプを調べる
-if($sourceType === "user") {
-  // 個人の場合
-  // メッセージ以外の時は何も返さず終了
-  if($type !== "text") {
-  	exit;
-  }
-
-  // 返信データ作成
-  $responseFormatText = [
-  		"type" => "text",
-  		"text" => $mesText."じゃないよ..."
-  	];
-
-  $postData = [
-  		"replyToken" => $replyToken,
-  		"messages"   => [$responseFormatText]
-  	];
-} elseif($sourceType === "room") {
-  // トークルームの場合
-  // メッセージ以外の時は何も返さず終了
-  if($type !== "text") {
-    exit;
-  }
-
-  // 返信データ作成
-  $responseFormatText = [
-      "type" => "text",
-      "text" => "「".$mesText."」じゃ...いや、意外と良いな..."
-    ];
-
-  $postData = [
-      "to" => $jsonObj->{"events"}[0]->{"source"}->{"roomId"},
-      "messages"   => [$responseFormatText]
-    ];
-} elseif($sourceType === "group") {
-  // グループの場合
-  // メッセージ以外の時は何も返さず終了
-  if($type !== "text") {
-    exit;
-  }
-
-  // 返信データ作成
-  $responseFormatText = [
-      "type" => "text",
-      "text" => "「".$mesText."」とかお子ちゃまだね。見損なったよ。"
-    ];
-
-  $postData = [
-      "to" => $jsonObj->{"events"}[0]->{"source"}->{"groupId"},
-      "messages"   => [$responseFormatText]
-    ];
+// メッセージ以外の時は何も返さず終了
+if($type !== "text") {
+	exit;
 }
+
+// 返信データ作成
+$responseFormatText = [
+		"type" => "text",
+		"text" => $mesText."じゃないよ..."
+	];
+
+$postData = [
+		"replyToken" => $replyToken,
+		"messages"   => [$responseFormatText]
+	];
 
 $ch = curl_init("https://api.line.me/v2/bot/message/reply");
 curl_setopt($ch, CURLOPT_POST, true);
@@ -82,3 +41,4 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, array(
 
 $result = curl_exec($ch);
 curl_close($ch);
+
