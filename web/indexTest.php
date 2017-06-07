@@ -47,7 +47,7 @@ if($sourceType === "user") {
     ];
 
   $postData = [
-      "replyToken" => $replyToken,
+      "to" => $jsonObj->{"events"}[0]->{"source"}->{"roomId"},
       "messages"   => [$responseFormatText]
     ];
 } elseif($sourceType === "group") {
@@ -64,7 +64,7 @@ if($sourceType === "user") {
     ];
 
   $postData = [
-      "replyToken" => $replyToken,
+      "to" => $jsonObj->{"events"}[0]->{"source"}->{"groupId"},
       "messages"   => [$responseFormatText]
     ];
 }
