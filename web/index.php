@@ -31,7 +31,7 @@ if(isset($roomId)) {
     ];
 
   $postData = [
-      "to"         => $roomId,
+      "replyToken" => $replyToken,
       "messages"   => [$responseFormatText]
     ];
 } elseif(isset($groupId)) {
@@ -47,7 +47,7 @@ if(isset($roomId)) {
     ];
 
   $postData = [
-      "to"         => $groupId,
+      "replyToken" => $replyToken,
       "messages"   => [$responseFormatText]
     ];
 } else {
