@@ -15,7 +15,7 @@ $replyToken = $jsonObj->{"events"}[0]->{"replyToken"};
 // トーク相手のタイプ取得
 $sourceType = $jsonObj->{"events"}[0]->{"source"}->{"type"};
 $roomId = $jsonObj->{"events"}[0]->{"source"}->{"roomId"};
-$groupId = $jsonObj->{"events"}[0]->{"source"}->{"groupId"}
+$groupId = $jsonObj->{"events"}[0]->{"source"}->{"groupId"};
 
 
 if(isset($roomId)) {
