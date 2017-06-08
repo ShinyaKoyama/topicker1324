@@ -19,37 +19,15 @@ $groupId = $jsonObj->{"events"}[0]->{"source"}->{"groupId"};
 
 
 if(isset($roomId)) {
-  // メッセージ以外の時は何も返さず終了
-  if($type !== "text") {
-    exit;
-  }
-
-  // 返信データ作成
-  $responseFormatText = [
-      "type" => "text",
-      "text" => "「".$mesText."」じゃ...いや、意外と良いな..."
-    ];
-
-  $postData = [
-      "replyToken" => $replyToken,
-      "messages"   => [$responseFormatText]
-    ];
+  require("room.php");
+  
+  $postData = room($replyToken, $type, $mesText);
+  
 } elseif(isset($groupId)) {
-  // メッセージ以外の時は何も返さず終了
-  if($type !== "text") {
-    exit;
-  }
-
-  // 返信データ作成
-  $responseFormatText = [
-      "type" => "text",
-      "text" => "「".$mesText."」とかしょーもない事言ってんな..."
-    ];
-
-  $postData = [
-      "replyToken" => $replyToken,
-      "messages"   => [$responseFormatText]
-    ];
+  require("group.php");
+  
+  $postData = group($replyToken, $type, $mesText);
+  
 } else {
   // メッセージ以外の時は何も返さず終了
   if($type !== "text") {
