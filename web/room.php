@@ -8,7 +8,7 @@ function room($replyToken, $type, $message) {
 	// 返信データ作成
 	$responseFormatText = [
 			"type" => "text",
-			"text" => "「".$mesText."」じゃ...いや、意外と良いな..."
+			"text" => "「".$message."」じゃ...いや、意外と良いな..."
 		];
 
 	$postData = [
