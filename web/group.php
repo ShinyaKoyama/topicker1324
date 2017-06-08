@@ -8,7 +8,7 @@ function group($replyToken, $type, $message) {
 	// 返信データ作成
 	$responseFormatText = [
 			"type" => "text",
-			"text" => "「".$mesText."」とかしょーもない事言ってんな..."
+			"text" => "「".$message."」とかしょーもない事言ってんな..."
 		];
 
 	$postData = [
