@@ -1,66 +1,60 @@
 <?php
+$accessToken = 'gIaXcBjVSAiACT1C8+4Zd3RXN3LJQGUvMEn4SPQSxB3PoSaIjz0H/Fu+IAKGvVGfE/g/ZKxq60d0AUZFF3o4FLIrBmDBvyqvBlW8CTFZ0hy8YXUN3CTsFWF0OhTFdlHQR1cZ+S6tsaB43RTrDjXy9wdB04t89/1O/w1cDnyilFU=';
 
-require('../vendor/autoload.php');
+// ユーザからのメッセージ取得
+$jsonString = file_get_contents('php://input');
+$jsonObj = json_decode($jsonString);
 
-$app = new Silex\Application();
-$app['debug'] = true;
+$type = $jsonObj->{"events"}[0]->{"message"}->{"type"};
+// メッセージ取得
+$mesText = $jsonObj->{"events"}[0]->{"message"}->{"text"};
+// ReplyToken取得
+$replyToken = $jsonObj->{"events"}[0]->{"replyToken"};
 
-// Register the monolog logging service
-$app->register(new Silex\Provider\MonologServiceProvider(), array(
-  'monolog.logfile' => 'php://stderr',
-));
-
-// Register view rendering
-$app->register(new Silex\Provider\TwigServiceProvider(), array(
-    'twig.path' => __DIR__.'/views',
-));
-
-// Our web handlers
-
-$app->get('/', function() use($app) {
-  $app['monolog']->addDebug('logging output.');
-  return $app['twig']->render('index.twig');
-});
+// トーク相手のタイプ取得
+$sourceType = $jsonObj->{"events"}[0]->{"source"}->{"type"};
+$roomId = $jsonObj->{"events"}[0]->{"source"}->{"roomId"};
+$groupId = $jsonObj->{"events"}[0]->{"source"}->{"groupId"};
 
 
-$app->get('/cowsay', function() use($app) {
-  $app['monolog']->addDebug('cowsay');
-  return "<pre>".\Cowsayphp\Cow::say("Cool beans")."</pre>";
-});
-
-$app->get('/', function() use($app) {
-  $app['monolog']->addDebug('logging output.');
-  return str_repeat('Hello', getenv('TIMES'));
-});
-
-$dbopts = parse_url(getenv('DATABASE_URL'));
-$app->register(new Csanquer\Silex\PdoServiceProvider\Provider\PDOServiceProvider('pdo'),
-               array(
-                'pdo.server' => array(
-                   'driver'   => 'pgsql',
-                   'user' => $dbopts["user"],
-                   'password' => $dbopts["pass"],
-                   'host' => $dbopts["host"],
-                   'port' => $dbopts["port"],
-                   'dbname' => ltrim($dbopts["path"],'/')
-                   )
-               )
-);
-
-$app->get('/db/', function() use($app) {
-  $st = $app['pdo']->prepare('SELECT name FROM test_table');
-  $st->execute();
-
-  $names = array();
-  while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
-    $app['monolog']->addDebug('Row ' . $row['name']);
-    $names[] = $row;
+if(isset($roomId)) {
+  require("room.php");
+  
+  $postData = room($replyToken, $type, $mesText);
+  
+} elseif(isset($groupId)) {
+  require("group.php");
+  
+  $postData = group($replyToken, $type, $mesText);
+  
+} else {
+  // メッセージ以外の時は何も返さず終了
+  if($type !== "text") {
+    exit;
   }
 
-  return $app['twig']->render('database.twig', array(
-    'names' => $names
-  ));
-});
+  // 返信データ作成
+  $responseFormatText = [
+      "type" => "text",
+      "text" => "「".$mesText."」じゃないよ..."
+    ];
 
+  $postData = [
+      "replyToken" => $replyToken,
+      "messages"   => [$responseFormatText]
+    ];
+}
 
-$app->run();
+$ch = curl_init("https://api.line.me/v2/bot/message/reply");
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
+curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+			'Content-Type: application/json; charser=UTF-8',
+			'Authorization: Bearer '.$accessToken
+		)
+	);
+
+$result = curl_exec($ch);
+curl_close($ch);
