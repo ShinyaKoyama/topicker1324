@@ -1,1 +1,1 @@
-web: vendor/bin/heroku-php-apache2 topicker
+web: vendor/bin/heroku-php-apache2 hello/
