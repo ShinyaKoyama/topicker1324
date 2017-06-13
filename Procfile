@@ -1,1 +1,1 @@
-web: vendor/bin/heroku-php-apache2 web/topicker
+web: vendor/bin/heroku-php-apache2 public
