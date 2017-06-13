@@ -1,5 +1,5 @@
 <?php
-require('../vendor/autoload.php');
+/*require('../vendor/autoload.php');
 $app = new Silex\Application();
 $app['debug'] = true;
 // Register the monolog logging service
@@ -15,4 +15,7 @@ $app->get('/', function() use($app) {
   $app['monolog']->addDebug('logging output.');
   return $app['twig']->render('index.twig');
 });
-$app->run();
+$app->run();*/
+
+require('../vendor/autoload.php');
+echo "Hello, World\n";
