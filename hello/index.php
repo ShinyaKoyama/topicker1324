@@ -17,5 +17,5 @@ $app->get('/', function() use($app) {
 });
 $app->run();*/
 
-//require('../vendor/autoload.php');
+require('../vendor/autoload.php');
 echo "Hello, World\n";
