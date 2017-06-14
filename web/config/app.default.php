@@ -1,5 +1,4 @@
 <?php
-$db = parse_url(env('CLEARDB_DATABASE_URL'));
 return [
     /**
      * Debug Level:
@@ -10,8 +9,7 @@ return [
      * Development Mode:
      * true: Errors and warnings shown.
      */
-    // 'debug' => filter_var(env('DEBUG', true), FILTER_VALIDATE_BOOLEAN),
-    'debug' => false,
+    'debug' => filter_var(env('DEBUG', true), FILTER_VALIDATE_BOOLEAN),
 
     /**
      * Configure basic information about the application.
@@ -65,13 +63,8 @@ return [
      *   The salt value is also used as the encryption key.
      *   You should treat it as extremely sensitive data.
      */
-    /*
     'Security' => [
-        'salt' => env('SECURITY_SALT', '111cfcee4595ee9b8547b3390579d587a8c4e268dec0ff16710bc2f34c71d306'),
-    ],
-    */
-    'Security' => [
-        'salt' => env('SALT'),
+        'salt' => env('SECURITY_SALT', '__SALT__'),
     ],
 
     /**
@@ -89,14 +82,12 @@ return [
     /**
      * Configure the cache adapters.
      */
-    /*
     'Cache' => [
         'default' => [
             'className' => 'File',
             'path' => CACHE,
             'url' => env('CACHE_DEFAULT_URL', null),
         ],
-        */
 
         /**
          * Configure the cache used for general framework caching.
@@ -104,7 +95,6 @@ return [
          * Duration will be set to '+2 minutes' in bootstrap.php when debug = true
          * If you set 'className' => 'Null' core cache will be disabled.
          */
-         /*
         '_cake_core_' => [
             'className' => 'File',
             'prefix' => 'myapp_cake_core_',
@@ -113,7 +103,6 @@ return [
             'duration' => '+1 years',
             'url' => env('CACHE_CAKECORE_URL', null),
         ],
-        */
 
         /**
          * Configure the cache for model and datasource caches. This cache
@@ -121,7 +110,6 @@ return [
          * in connections.
          * Duration will be set to '+2 minutes' in bootstrap.php when debug = true
          */
-         /*
         '_cake_model_' => [
             'className' => 'File',
             'prefix' => 'myapp_cake_model_',
@@ -129,45 +117,6 @@ return [
             'serialize' => true,
             'duration' => '+1 years',
             'url' => env('CACHE_CAKEMODEL_URL', null),
-        ],
-    ],
-    */
-    
-    'Cache' => [
-        'default' => [
-            'className' => 'Memcached',
-            'prefix' => 'myapp_cake_',
-            'servers' => [env('MEMCACHIER_SERVERS')],
-            'username' => env('MEMCACHIER_USERNAME'),
-            'password' => env('MEMCACHIER_PASSWORD'),
-            'duration' => '+1440 minutes',
-        ],
-
-        'session' => [
-            'className' => 'Memcached',
-            'prefix' => 'myapp_cake_session_',
-            'servers' => [env('MEMCACHIER_SERVERS')],
-            'username' => env('MEMCACHIER_USERNAME'),
-            'password' => env('MEMCACHIER_PASSWORD'),
-            'duration' => '+1440 minutes',
-        ],
-
-        '_cake_core_' => [
-            'className' => 'Memcached',
-            'prefix' => 'myapp_cake_core_',
-            'servers' => [env('MEMCACHIER_SERVERS')],
-            'username' => env('MEMCACHIER_USERNAME'),
-            'password' => env('MEMCACHIER_PASSWORD'),
-            'duration' => '+1 years',
-        ],
-
-        '_cake_model_' => [
-            'className' => 'Memcached',
-            'prefix' => 'myapp_cake_model_',
-            'servers' => [env('MEMCACHIER_SERVERS')],
-            'username' => env('MEMCACHIER_USERNAME'),
-            'password' => env('MEMCACHIER_PASSWORD'),
-            'duration' => '+1 years',
         ],
     ],
 
@@ -268,21 +217,18 @@ return [
      * Drivers include Mysql Postgres Sqlite Sqlserver
      * See vendor\cakephp\cakephp\src\Database\Driver for complete list
      */
-     /*
     'Datasources' => [
         'default' => [
             'className' => 'Cake\Database\Connection',
             'driver' => 'Cake\Database\Driver\Mysql',
             'persistent' => false,
             'host' => 'localhost',
-            */
             /**
              * CakePHP will use the default DB port based on the driver selected
              * MySQL on MAMP uses port 8889, MAMP users will want to uncomment
              * the following line and set the port accordingly
              */
             //'port' => 'non_standard_port_number',
-            /*
             'username' => 'my_app',
             'password' => 'secret',
             'database' => 'my_app',
@@ -291,7 +237,6 @@ return [
             'flags' => [],
             'cacheMetadata' => true,
             'log' => false,
-            */
 
             /**
              * Set identifier quoting to true if you are using reserved words or
@@ -301,7 +246,7 @@ return [
              * decreases performance because each query needs to be traversed and
              * manipulated before being executed.
              */
-            //'quoteIdentifiers' => false,
+            'quoteIdentifiers' => false,
 
             /**
              * During development, if using MySQL < 5.6, uncommenting the
@@ -312,22 +257,7 @@ return [
              */
             //'init' => ['SET GLOBAL innodb_stats_on_metadata = 0'],
 
-            //'url' => env('DATABASE_URL', null),
-        //],
-        
-        'Datasources' => [
-        'default' => [
-            'className' => 'Cake\Database\Connection',
-            'driver' => 'Cake\Database\Driver\Mysql',
-            'persistent' => false,
-            'host' => $db['host'],
-            'username' => $db['user'],
-            'password' => $db['pass'],
-            'database' => substr($db['path'], 1),
-            'encoding' => 'utf8',
-            'timezone' => 'UTC',
-            'cacheMetadata' => true,
-            'quoteIdentifiers' => false,
+            'url' => env('DATABASE_URL', null),
         ],
 
         /**
@@ -355,7 +285,6 @@ return [
     /**
      * Configures logging options
      */
-     /*
     'Log' => [
         'debug' => [
             'className' => 'Cake\Log\Engine\FileLog',
@@ -370,19 +299,6 @@ return [
             'file' => 'error',
             'levels' => ['warning', 'error', 'critical', 'alert', 'emergency'],
             'url' => env('LOG_ERROR_URL', null),
-        ],
-    ],
-    */
-    'Log' => [
-        'debug' => [
-            'className' => 'Cake\Log\Engine\ConsoleLog',
-            'stream' => 'php://stdout',
-            'levels' => ['notice', 'info', 'debug'],
-        ],
-        'error' => [
-            'className' => 'Cake\Log\Engine\ConsoleLog',
-            'stream' => 'php://stderr',
-            'levels' => ['warning', 'error', 'critical', 'alert', 'emergency'],
         ],
     ],
 
@@ -424,15 +340,7 @@ return [
      *
      * To use database sessions, load the SQL file located at config/Schema/sessions.sql
      */
-    /*
     'Session' => [
         'defaults' => 'php',
-    ],
-    */
-    'Session' => [
-        'defaults' => 'cache',
-        'handler' => [
-            'config' => 'session'
-        ]
     ],
 ];

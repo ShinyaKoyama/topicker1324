@@ -90,14 +90,9 @@ try {
  * When debug = true the metadata cache should only last
  * for a short time.
  */
-/*
 if (Configure::read('debug')) {
     Configure::write('Cache._cake_model_.duration', '+2 minutes');
     Configure::write('Cache._cake_core_.duration', '+2 minutes');
-}
-*/
-if (isset($_ENV['CAKE_ENV'])) {
-    Configure::load('app_' . $_ENV['CAKE_ENV'], 'default');
 }
 
 /*
