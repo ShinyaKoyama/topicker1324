@@ -4,7 +4,8 @@
     "monolog/monolog": "^1.22",
     "twig/twig": "^1.0",
     "symfony/twig-bridge": "^3",
-    "ext-intl": "*"
+    "ext-intl": "*",
+    "ext-mbstring": "*"
   },
   "require-dev": {
     "psy/psysh": "@stable",
