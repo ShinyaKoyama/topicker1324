@@ -24,7 +24,8 @@ if (php_sapi_name() === 'cli-server') {
         return false;
     }
 }
-require dirname(__DIR__) . '/vendor/autoload.php';
+// require dirname(__DIR__) . '/vendor/autoload.php';
+require 'app/vendor/autoload.php';
 
 use App\Application;
 use Cake\Http\Server;
