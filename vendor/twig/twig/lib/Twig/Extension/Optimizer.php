@@ -9,9 +9,12 @@
  * file that was distributed with this source code.
  */
 
-final class Twig_Extension_Optimizer extends Twig_Extension
+/**
+ * @final
+ */
+class Twig_Extension_Optimizer extends Twig_Extension
 {
-    private $optimizers;
+    protected $optimizers;
 
     public function __construct($optimizers = -1)
     {
@@ -22,4 +25,11 @@ final class Twig_Extension_Optimizer extends Twig_Extension
     {
         return array(new Twig_NodeVisitor_Optimizer($this->optimizers));
     }
+
+    public function getName()
+    {
+        return 'optimizer';
+    }
 }
+
+class_alias('Twig_Extension_Optimizer', 'Twig\Extension\OptimizerExtension', false);

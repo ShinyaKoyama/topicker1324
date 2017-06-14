@@ -22,8 +22,10 @@
  *  </ul>
  * {% endif %}
  * </pre>
+ *
+ * @final
  */
-final class Twig_TokenParser_If extends Twig_TokenParser
+class Twig_TokenParser_If extends Twig_TokenParser
 {
     public function parse(Twig_Token $token)
     {
@@ -80,3 +82,5 @@ final class Twig_TokenParser_If extends Twig_TokenParser
         return 'if';
     }
 }
+
+class_alias('Twig_TokenParser_If', 'Twig\TokenParser\IfTokenParser', false);
