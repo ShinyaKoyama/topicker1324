@@ -6,6 +6,9 @@
     "symfony/twig-bridge": "^3"
   },
   "require-dev": {
+    "psy/psysh": "@stable",
+    "cakephp/debug_kit": "~3.2",
+    "cakephp/bake": "~1.1",
     "heroku/heroku-buildpack-php": "*"
-  }
+  },
 }
