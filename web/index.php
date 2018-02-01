@@ -14,6 +14,7 @@ $replyToken = $jsonObj->{"events"}[0]->{"replyToken"};
 
 // トーク相手のタイプ取得
 $sourceType = $jsonObj->{"events"}[0]->{"source"}->{"type"};
+$userId = $jsonObj->{"events"}[0]->{"source"}->{"userId"};
 $roomId = $jsonObj->{"events"}[0]->{"source"}->{"roomId"};
 $groupId = $jsonObj->{"events"}[0]->{"source"}->{"groupId"};
 
@@ -37,7 +38,7 @@ if(isset($roomId)) {
   // 返信データ作成
   $responseFormatText = [
       "type" => "text",
-      "text" => "「".$mesText."」じゃないよ..."
+      "text" => "「".$mesText."」じゃないよ...ちなみに、あなたのIDは「".$userId."」だったよ..."
     ];
 
   $postData = [
